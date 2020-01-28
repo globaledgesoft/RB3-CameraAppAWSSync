@@ -27,14 +27,19 @@ import com.ges.rb3imagedisplay.Adapters.GridviewAdapter;
 import com.ges.rb3imagedisplay.Interface.IDownloadS3Interface;
 import com.ges.rb3imagedisplay.Model.ImageModel;
 import com.ges.rb3imagedisplay.R;
-import com.ges.rb3imagedisplay.Uility.Constants;
-import com.ges.rb3imagedisplay.Uility.Logger;
-import com.ges.rb3imagedisplay.Uility.Util;
+import com.ges.rb3imagedisplay.Utility.Constants;
+import com.ges.rb3imagedisplay.Utility.Logger;
+import com.ges.rb3imagedisplay.Utility.Util;
 import com.ges.rb3imagedisplay.aws.S3Downloader;
 
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * This is the launcher activity. This class is reponsible to display
+ * the images downloaded from AWS S3 bucket in a GridView after the necessary
+ * permissions are granted.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getCanonicalName();

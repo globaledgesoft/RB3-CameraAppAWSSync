@@ -1,7 +1,10 @@
-package com.ges.rb3imagedisplay.Uility;
+package com.ges.rb3imagedisplay.Utility;
 
 import android.os.Environment;
 
+/**
+ * This class contains all constants being used throughout the code
+ */
 public class Constants {
     public static final String ROOT_PATH = Environment.getExternalStorageDirectory().toString() + "/Android/data/" + "com.ges.rb3imagedisplay";
     public static final String DOWNLOAD_FOLDER = "S3Images";

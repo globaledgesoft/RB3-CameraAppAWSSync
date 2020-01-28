@@ -2,6 +2,9 @@ package com.ges.rb3imagedisplay.Model;
 
 import android.graphics.Bitmap;
 
+/**
+ * Model class for Images
+ */
 public class ImageModel {
     public Bitmap bitmap;
     public String imageTitle;

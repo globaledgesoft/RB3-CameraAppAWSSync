@@ -12,6 +12,9 @@ import com.ges.rb3imagedisplay.R;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for GridView Images
+ */
 public class GridviewAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<ImageModel> mImageList;

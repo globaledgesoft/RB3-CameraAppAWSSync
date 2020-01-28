@@ -1,10 +1,13 @@
-package com.ges.rb3imagedisplay.Uility;
+package com.ges.rb3imagedisplay.Utility;
 
 import android.util.Log;
 
+/**
+ * Custom Logger class
+ */
 public class Logger {
 
-    private static boolean isLogEnabled = true;
+    private static boolean isLogEnabled = false;
 
     /**
      * Method to show Debug Logs

@@ -6,9 +6,13 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.ges.rb3imagedisplay.Uility.Logger;
-import com.ges.rb3imagedisplay.Uility.Util;
+import com.ges.rb3imagedisplay.Utility.Logger;
+import com.ges.rb3imagedisplay.Utility.Util;
 
+/**
+ * This class helps in getting BasicAWSCredentials provider instance
+ * and TransferUtility instance
+ */
 public class AmazonUtil {
 
     private static AmazonS3Client sS3Client;

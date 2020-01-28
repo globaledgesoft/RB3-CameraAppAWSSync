@@ -16,14 +16,17 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.ges.rb3imagedisplay.Activity.MainActivity;
 import com.ges.rb3imagedisplay.Interface.IDownloadS3Interface;
 import com.ges.rb3imagedisplay.R;
-import com.ges.rb3imagedisplay.Uility.Constants;
-import com.ges.rb3imagedisplay.Uility.Util;
+import com.ges.rb3imagedisplay.Utility.Constants;
+import com.ges.rb3imagedisplay.Utility.Util;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class is for getting file list and downloading images from AWS S3 bucket
+ */
 public class S3Downloader {
     private static final String TAG = S3Downloader.class.getSimpleName();
 

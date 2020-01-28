@@ -12,13 +12,17 @@ import androidx.viewpager.widget.ViewPager;
 import com.ges.rb3imagedisplay.Adapters.ImageViewPagerAdapter;
 import com.ges.rb3imagedisplay.Model.ImageModel;
 import com.ges.rb3imagedisplay.R;
-import com.ges.rb3imagedisplay.Uility.Constants;
-import com.ges.rb3imagedisplay.Uility.Logger;
-import com.ges.rb3imagedisplay.Uility.Util;
+import com.ges.rb3imagedisplay.Utility.Constants;
+import com.ges.rb3imagedisplay.Utility.Logger;
+import com.ges.rb3imagedisplay.Utility.Util;
 
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * This class is reponsible to display single image in a ViewPager which on swipe shows
+ * all the images downloaded from AWS S3 bucket.
+ */
 public class ViewPagerActivity extends Activity {
     private static final String TAG = ViewPagerActivity.class.getSimpleName();
     private ViewPager viewPager;

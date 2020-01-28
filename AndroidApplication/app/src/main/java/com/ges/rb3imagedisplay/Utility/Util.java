@@ -1,4 +1,4 @@
-package com.ges.rb3imagedisplay.Uility;
+package com.ges.rb3imagedisplay.Utility;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,7 +12,6 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
@@ -23,6 +22,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Class for commonly used methods
+ */
 public class Util {
 
     private static final String TAG = Util.class.getSimpleName();

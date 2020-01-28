@@ -14,11 +14,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.ges.rb3imagedisplay.Model.ImageModel;
 import com.ges.rb3imagedisplay.R;
-import com.ges.rb3imagedisplay.Uility.Logger;
+import com.ges.rb3imagedisplay.Utility.Logger;
 
 import java.util.ArrayList;
 
-
+/**
+ * Adapter class for ViewPager
+ */
 public class ImageViewPagerAdapter extends PagerAdapter {
     private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
     private Activity mActivity;
