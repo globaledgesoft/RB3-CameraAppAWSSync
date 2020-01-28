@@ -10,12 +10,9 @@ The project is designed to show the strength of Qualcomm’s Robotics RB3 camera
 
 
 ## How to Install
-1. Download the apk [(Debug APK)](https://github.com/jinka2015/RB3-CameraAppAWSSync/tree/master/AndroidApplication/Outputs/rb3cameraimages.apk)
+1. Download the apk  [(Debug APK)](Output)
 2. ADB tool can be used to install the Application (on both Windows and Linux) adb install rb3cameraimages.apk
 3. Run the Application in the phone
-
-
-https://github.com/jinka2015/RB3-CameraAppAWSSync/tree/master/AndroidApplication
 
 ## How to Use
 1. Launch the application in the android phone and provide the permissions required, the app proceeds searching the configuration file(credentials.csv) required.
