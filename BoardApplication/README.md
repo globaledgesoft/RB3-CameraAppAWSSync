@@ -14,26 +14,20 @@ To build and run the Python script, you'll need:
 - AWS Account
 
 For instructions on installing the AWS SDK for Python (Boto 3) and setting up
-credentials, see `Boto 3 Docs Quickstart <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html>`_.
+credentials, see [Boto 3 Docs Quickstart](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html)
 
 ## Running the application
 
-
-The application is written for execution in a command prompt window or
-Python console.
-
 Create a credentials script file
 - To easily set the environment, default region (say file eg. env.sh) copy the keys and region as shown below
+```
 	export AWS_ACCESS_KEY_ID=”Your Access key”
 	export AWS_SECRET_ACCESS_KEY=”Your Secret key”
 	export AWS_DEFAULT_REGION=”Your default region”
-- Run the env.sh once on the board to set your generated keys and region of your choice. Now run the upload.py script as given below.
-
-To run the upload.py example in a command prompt window, import Boto3 and make requests and process responses from the AWS S3 service as shown in upload.py file. For eg. run the file as shown below
-
-::
-
-    python -m upload bucket_name region
+```
+- Run the env.sh on the board to set your generated keys and region of your choice.
+- Run the upload.py on the terminal as shown below. This scripts import Boto3, make requests and process responses from the AWS S3 service
+	>$ python -m upload bucket_name region
 
 ## Documentation
 
