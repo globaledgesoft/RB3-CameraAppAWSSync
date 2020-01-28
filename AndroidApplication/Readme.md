@@ -6,13 +6,16 @@ The project is designed to show the strength of Qualcomm’s Robotics RB3 camera
 * Android Phone with version 8.0 and above.
 * ADB installed in the Windows/ Linux system. Instructions to install ADB in the system can be found here – https://developer.android.com/studio/command-line/adb.html
 * Credentials.csv file located in Internal storage of Android Device. (This file contains AWS access key and secret key)
+* AWS S3 bucket to be named as “rb3imgesupload”
 
 
 ## How to Install
-1. Download the apk (rb3cameraimages.apk) from Output directory
+1. Download the apk [(Debug APK)](https://github.com/jinka2015/RB3-CameraAppAWSSync/tree/master/AndroidApplication/Outputs/rb3cameraimages.apk)
 2. ADB tool can be used to install the Application (on both Windows and Linux) adb install rb3cameraimages.apk
 3. Run the Application in the phone
 
+
+https://github.com/jinka2015/RB3-CameraAppAWSSync/tree/master/AndroidApplication
 
 ## How to Use
 1. Launch the application in the android phone and provide the permissions required, the app proceeds searching the configuration file(credentials.csv) required.
