@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RB3 Camera Images</string>
+    <string name="app_description">Images from AWS S3 bucket</string>
+    <string name="dialogAwsTitle">AWS Credentials File Required</string>
+    <string name="dialogAwsMessage">This application needs IAM user credentials file(credentials.csv) to authenticate with AWS cloud.</string>
+    <string name="credentials">Select Credentials File</string>
+    <string name="regionEndpoint">Select Region Endpoint</string>
+    <string name="noItemFound">No Item Found</string>
+    <string name="error_region">The AWS Access Key Id you provided does not exist in the specified Region.</string>
+    <string name="progress_csv_files">Looking for (credentials.csv) files...</string>
+    <string name="progress_download_s3">Downloading Images from S3..</string>
+    <string name="response_success">Success</string>
+    <string name="toast_internet_connection">Please check your internet and try again!</string>
+    <string name="response_error">Error</string>
+
+</resources>
