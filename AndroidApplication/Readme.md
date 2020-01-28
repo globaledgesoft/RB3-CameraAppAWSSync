@@ -14,9 +14,6 @@ The project is designed to show the strength of Qualcomm’s Robotics RB3 camera
 2. ADB tool can be used to install the Application (on both Windows and Linux) adb install rb3cameraimages.apk
 3. Run the Application in the phone
 
-
-https://github.com/jinka2015/RB3-CameraAppAWSSync/tree/master/AndroidApplication
-
 ## How to Use
 1. Launch the application in the android phone and provide the permissions required, the app proceeds searching the configuration file(credentials.csv) required.
 2. Accessing the configuration file, the user requested to provide the Region Endpoint where S3 is created.
