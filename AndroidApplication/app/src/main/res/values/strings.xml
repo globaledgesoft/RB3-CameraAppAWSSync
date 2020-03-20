@@ -12,5 +12,10 @@
     <string name="response_success">Success</string>
     <string name="toast_internet_connection">Please check your internet and try again!</string>
     <string name="response_error">Error</string>
+    <string name="toast_permission_required">This app requires storage permission.Please go to App settings and enable permission</string>
+    <string name="toast_error_csvfile">Error in reading CSV file</string>
+    <string name="no_images_in_s3_bucket">No images in S3 bucket!</string>
+    <string name="string_true">true</string>
+    <string name="amazon_s3_exception">AmazonS3Exception</string>
 
 </resources>

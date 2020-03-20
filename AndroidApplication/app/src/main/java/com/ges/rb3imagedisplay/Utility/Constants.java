@@ -8,6 +8,7 @@ import android.os.Environment;
 public class Constants {
     public static final String ROOT_PATH = Environment.getExternalStorageDirectory().toString() + "/Android/data/" + "com.ges.rb3imagedisplay";
     public static final String DOWNLOAD_FOLDER = "S3Images";
+    public static final String ACCESS_KEY_ID = "Access key ID";
 
     //Dialog related
     public static final String OK = "Ok";
@@ -21,6 +22,7 @@ public class Constants {
     public static final String ACCESS_KEY = "accessKey";
     public static final String SECRET_KEY = "secretKey";
     public static final String CUSTOMER_ENDPOINT = "customer_endpoint";
+    public static final String IS_ACCESSED = "is_accessed";
 
 
     //Intent Keys

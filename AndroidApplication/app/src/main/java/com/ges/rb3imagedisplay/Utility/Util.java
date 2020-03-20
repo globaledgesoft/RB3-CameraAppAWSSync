@@ -12,8 +12,12 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+
+import com.ges.rb3imagedisplay.R;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,9 +41,12 @@ public class Util {
      */
     public static File createLocalDirectory(Context context) {
         File rootFile = new File(Constants.ROOT_PATH, Constants.DOWNLOAD_FOLDER);
-        if (!rootFile.exists()) {
-            rootFile.mkdirs();
-        }
+        if (rootFile.isDirectory()) {
+            String[] children = rootFile.list();
+            for (int i = 0; i < children.length; i++) {
+                new File(rootFile, children[i]).delete();
+            }
+        } else rootFile.mkdirs();
         return rootFile;
     }
 
@@ -66,23 +73,32 @@ public class Util {
      * @throws FileNotFoundException
      */
     //
-    private static void readFileData(Context context, String path) throws FileNotFoundException {
+    private static CharSequence[] readFileData(final Context context, String path) throws FileNotFoundException {
         String[] data = null;
         File file = new File(path);
         if (file.exists()) {
             BufferedReader br = new BufferedReader(new FileReader(file));
 
             try {
+                String csvLineHeading = br.readLine();
                 String csvLine;
-                while ((csvLine = br.readLine()) != null) {
-                    data = csvLine.split(",");
+                if (csvLineHeading != null && csvLineHeading.contains(Constants.ACCESS_KEY_ID)) {
+                    while ((csvLine = br.readLine()) != null) {
+                        data = csvLine.split(",");
+                    }
+                    putKeyInSharedPreference(context, data[0], data[1]);
+
+
+                } else {
+                    return new CharSequence[]{};
                 }
-                putKeyInSharedPreference(context, data[0], data[1]);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 throw new RuntimeException("Error in reading CSV file: " + ex);
             }
         }
+        return new CharSequence[]{file.toString()};
     }
+
 
     /**
      * This method is to save data in Shared preference
@@ -91,7 +107,8 @@ public class Util {
      * @param accessKey
      * @param secretKey
      */
-    public static void putKeyInSharedPreference(Context context, String accessKey, String secretKey) {
+    public static void putKeyInSharedPreference(Context context, String accessKey, String
+            secretKey) {
         SharedPreferences pref = context.getSharedPreferences(Constants.KEY, 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(Constants.ACCESS_KEY, accessKey);
@@ -119,7 +136,7 @@ public class Util {
                         File yourFile = new File(dir, listFile[i].getName());
                         csvFiles = new CharSequence[]{yourFile.toString()};
                         try {
-                            readFileData(context, yourFile.toString());
+                            csvFiles = readFileData(context, yourFile.toString());
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -143,7 +160,8 @@ public class Util {
         String accessKey = sharedpreferences.getString(Constants.ACCESS_KEY, "");
         String secreteKey = sharedpreferences.getString(Constants.SECRET_KEY, "");
         String regionEndpoint = sharedpreferences.getString(Constants.REGION, "");
-        return new String[]{accessKey, secreteKey, regionEndpoint};
+        Boolean isAccessed = sharedpreferences.getBoolean(Constants.IS_ACCESSED, false);
+        return new String[]{accessKey, secreteKey, regionEndpoint, isAccessed.toString()};
     }
 
 
@@ -205,7 +223,7 @@ public class Util {
                 return true;
             } else {
                 Logger.v(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.REQUEST_CODE_STORAGE);
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, Constants.REQUEST_CODE_STORAGE);
                 return false;
             }
         } else {
