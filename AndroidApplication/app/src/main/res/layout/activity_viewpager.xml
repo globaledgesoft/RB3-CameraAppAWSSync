@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
     <ImageView
         android:id="@+id/img_swipe_left"
         android:layout_width="@dimen/dimen_50dp"
@@ -11,12 +15,6 @@
         android:layout_centerVertical="true"
         android:src="@drawable/left_arrow"
         android:visibility="visible" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
     <ImageView
         android:id="@+id/img_swipe_right"
         android:layout_width="@dimen/dimen_50dp"

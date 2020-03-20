@@ -11,12 +11,12 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,7 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * This is the launcher activity. This class is reponsible to display
+ * This is the launcher activity. This class is responsible to display
  * the images downloaded from AWS S3 bucket in a GridView after the necessary
  * permissions are granted.
  */
@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence[] regionEndpoints = {};
     private String regionKey;
     private File root;
-    static public boolean isAccessed;
+    public boolean isAccessed;
+    private TextView textView_noImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initViews() {
         progressDialog = new ProgressDialog(this);
-        s3downloaderObj = new S3Downloader(this);
         mGridView = (GridView) findViewById(R.id.simpleGridView);
         imageList = Util.getImageList(getBaseContext());
+        textView_noImages = (TextView) findViewById(R.id.textview_no_images);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,10 +98,12 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.refresh:
-                if (Util.isStoragePermissionGranted(this))
-                    if (isAccessed)
+                if (Util.isStoragePermissionGranted(this)) {
+                    String isAccessed = Util.getKeyFromSharedPreference(this)[3];
+                    if (isAccessed.equalsIgnoreCase(getString(R.string.string_true)))
                         downloadImagesS3();
                     else checkCredential();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -112,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
     private void setGridAdapter() {
         GridviewAdapter gridviewAdapter = new GridviewAdapter(getApplicationContext(), mModelList);
         mGridView.setAdapter(gridviewAdapter);
+        if (mModelList.isEmpty()) {
+            textView_noImages.setVisibility(View.VISIBLE);
+            mGridView.setVisibility(View.GONE);
+        } else {
+            textView_noImages.setVisibility(View.GONE);
+            mGridView.setVisibility(View.VISIBLE);
+        }
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -120,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        hideLoading();
 
     }
 
@@ -131,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             checkCredential();
             Logger.d(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
         } else {
+            Toast.makeText(this, R.string.toast_permission_required, Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -140,17 +152,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private void downloadImagesS3() {
         showLoading(getString(R.string.progress_download_s3));
+        s3downloaderObj = new S3Downloader(this);
         s3downloaderObj.initDownloadFromS3AsyncTask();
         s3downloaderObj.setOns3DownloadDone(new IDownloadS3Interface() {
             @Override
             public void onDownloadSuccess(String response, int count) {
                 if (response.equalsIgnoreCase(getString(R.string.response_success))) {
-                    hideLoading();
                     counter++;
                     Logger.d(TAG, "onDownloadSuccess");
                     if (count == counter) {
-
+                        counter = 0;
                         imageList = Util.getImageList(getBaseContext());
+                        Logger.d(TAG, "imageList.length " + imageList.length);
                         updateGridView(imageList);
                     }
                 }
@@ -159,8 +172,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDownloadError(String response) {
                 hideLoading();
-                Log.e(TAG, "Error Uploading");
-
+                Logger.e(TAG, "Error onDownload");
             }
         });
     }
@@ -202,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void hideLoading() {
         if (progressDialog != null && progressDialog.isShowing()) {
+            Logger.d(TAG, "hideLoading");
             progressDialog.dismiss();
         }
     }
@@ -210,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Async class for finding the root of Internal Storage and check for credentials.csv
      */
-    public class CSVFileAsyncTask extends AsyncTask<Void, Void, Void> {
+    public class CSVFileAsyncTask extends AsyncTask<Void, Void, CharSequence[]> {
         private ProgressDialog progressDialog;
 
         public CSVFileAsyncTask(MainActivity activity) {
@@ -224,16 +237,9 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.show();
         }
 
-        @Override
-        protected void onPostExecute(Void result) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-                openCredentialsDialog();
-            }
-        }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected CharSequence[] doInBackground(Void... params) {
             try {
                 root = new File(Environment.getExternalStorageDirectory()
                         .getAbsolutePath());
@@ -242,7 +248,17 @@ public class MainActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return null;
+            return csvFiles;
+        }
+
+        @Override
+        protected void onPostExecute(CharSequence[] result) {
+            progressDialog.dismiss();
+            if (result != null && result.toString().isEmpty()) {
+                Toast.makeText(MainActivity.this, R.string.toast_error_csvfile, Toast.LENGTH_SHORT).show();
+            } else {
+                openCredentialsDialog();
+            }
         }
     }
 
@@ -268,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
         alt_bld.setNegativeButton(Constants.CANCEL, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                finish();
+                dialog.dismiss();
             }
         });
         AlertDialog alert = alt_bld.create();
@@ -295,8 +311,6 @@ public class MainActivity extends AppCompatActivity {
                 editor.putString(Constants.REGION, regionKey);
                 Logger.d(TAG, "REGION INSERT" + regionKey);
                 editor.apply();
-
-
             }
         });
         alt_bld.setPositiveButton(Constants.OK, new DialogInterface.OnClickListener() {
@@ -308,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
         alt_bld.setNegativeButton(Constants.CANCEL, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                finish();
+                dialog.dismiss();
             }
         });
         AlertDialog alert = alt_bld.create();
@@ -335,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
                     .setNegativeButton(Constants.CANCEL, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int i) {
-                            finish();
+                            dialog.dismiss();
                         }
                     });
             alertdialog.show();

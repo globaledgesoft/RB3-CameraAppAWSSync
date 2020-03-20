@@ -1,6 +1,7 @@
 package com.ges.rb3imagedisplay.aws;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import com.ges.rb3imagedisplay.Activity.MainActivity;
 import com.ges.rb3imagedisplay.Interface.IDownloadS3Interface;
 import com.ges.rb3imagedisplay.R;
 import com.ges.rb3imagedisplay.Utility.Constants;
+import com.ges.rb3imagedisplay.Utility.Logger;
 import com.ges.rb3imagedisplay.Utility.Util;
 
 import java.io.File;
@@ -24,16 +26,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
 /**
  * This class is for getting file list and downloading images from AWS S3 bucket
  */
 public class S3Downloader {
     private static final String TAG = S3Downloader.class.getSimpleName();
-
     private Context context;
     private File rootFile;
     private TransferUtility transferUtility;
     private IDownloadS3Interface s3DownloadInterface;
+    private boolean isAccessed = false;
 
     public S3Downloader(Context context) {
         this.context = context;
@@ -48,18 +51,16 @@ public class S3Downloader {
      */
     public void initDownload(String fileName, int imageCount) {
         File fileToDownload = new File(rootFile.getPath(), fileName);
-
         TransferObserver transferObserver = transferUtility.download(
                 Constants.BUCKET_NAME,
                 fileName,
                 fileToDownload
         );
-
         transferObserver.setTransferListener(new DownloadListener(imageCount));
     }
 
     /**
-     * Methos to execute DownloadFromS3AsyncTask
+     * Method to execute DownloadFromS3AsyncTask
      */
     public void initDownloadFromS3AsyncTask() {
         new DownloadFromS3AsyncTask().execute();
@@ -74,20 +75,20 @@ public class S3Downloader {
 
         @Override
         public void onError(int id, Exception e) {
-            Log.e(TAG, "Error during upload: " + id, e);
+            Logger.e(TAG, "Error during download: " + id, e);
             s3DownloadInterface.onDownloadError(e.toString());
             s3DownloadInterface.onDownloadError("Error");
         }
 
         @Override
         public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-            Log.d(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
+            Logger.d(TAG, String.format("onProgressChanged: %d, total: %d, current: %d",
                     id, bytesTotal, bytesCurrent));
         }
 
         @Override
         public void onStateChanged(int id, TransferState newState) {
-            Log.d(TAG, "onStateChanged: " + id + ", " + newState);
+            Logger.d(TAG, "onStateChanged: " + id + ", " + newState);
             if (newState == TransferState.COMPLETED) {
                 s3DownloadInterface.onDownloadSuccess("Success", imageCount);
             }
@@ -109,23 +110,27 @@ public class S3Downloader {
 
         @Override
         protected List<String> doInBackground(Void... voids) {
-
             return getObjectNamesForBucket(Constants.BUCKET_NAME, amazonS3Client);
         }
 
         @Override
         protected void onPostExecute(List<String> strings) {
             super.onPostExecute(strings);
-            Log.d(TAG, "strings " + strings.size());
+            Logger.d(TAG, "strings " + strings.size());
             for (String file : strings) {
-                if (file.equalsIgnoreCase("AmazonS3Exception")) {
+                if (file.equalsIgnoreCase(context.getString(R.string.amazon_s3_exception))) {
                     Util.errorDialog(context, context.getResources().getString(R.string.error_region));
-                    MainActivity.isAccessed = false;
+                    isAccessed = false;
                     s3DownloadInterface.onDownloadError(context.getString(R.string.response_error));
                 } else {
-                    MainActivity.isAccessed = true;
+                    isAccessed = true;
                     initDownload(file, strings.size());
                 }
+                SharedPreferences pref = context.getSharedPreferences(Constants.KEY, 0);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean(Constants.IS_ACCESSED, isAccessed);
+                editor.commit();
+
             }
         }
     }
@@ -152,7 +157,7 @@ public class S3Downloader {
                 }
             }
         } catch (AmazonS3Exception e) {
-            objectNames.add("AmazonS3Exception");
+            objectNames.add((context.getString(R.string.amazon_s3_exception)));
         }
         return objectNames;
     }

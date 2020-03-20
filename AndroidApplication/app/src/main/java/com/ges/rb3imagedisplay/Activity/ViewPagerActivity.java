@@ -19,6 +19,9 @@ import com.ges.rb3imagedisplay.Utility.Util;
 import java.io.File;
 import java.util.ArrayList;
 
+import static android.view.View.FOCUS_LEFT;
+import static android.view.View.FOCUS_RIGHT;
+
 /**
  * This class is reponsible to display single image in a ViewPager which on swipe shows
  * all the images downloaded from AWS S3 bucket.
@@ -45,6 +48,20 @@ public class ViewPagerActivity extends Activity {
         viewPager = findViewById(R.id.pager);
         imgLeftSwipe = (ImageView) findViewById(R.id.img_swipe_left);
         imgRightSwipe = (ImageView) findViewById(R.id.img_swipe_right);
+        imgRightSwipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.d(TAG, "RIGHT SWIPE " + FOCUS_RIGHT);
+                viewPager.arrowScroll(FOCUS_RIGHT);
+            }
+        });
+        imgLeftSwipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.d(TAG, "LEFT SWIPE " + FOCUS_LEFT);
+                viewPager.arrowScroll(FOCUS_LEFT);
+            }
+        });
     }
 
     @Override
@@ -56,7 +73,6 @@ public class ViewPagerActivity extends Activity {
         int pos = getIntent().getIntExtra(Constants.INTENT_POSITION, 0);
         viewPager.setCurrentItem(pos);
         setSwipeButtonAction(pos);
-
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
